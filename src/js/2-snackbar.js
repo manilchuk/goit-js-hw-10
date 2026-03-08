@@ -1,1 +1,42 @@
-console.log('Hello 2');
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
+
+const form = document.querySelector('.form');
+const inputDelay = document.querySelector('.inp-delay');
+
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  const delay = Number(inputDelay.value);
+  if (isNaN(delay) || delay < 0) return;
+  const selectedState = document.querySelector('input[name="state"]:checked');
+  if (!selectedState) return alert('Оберіть стан!');
+  const isPositive = selectedState.value === 'fulfilled';
+  createPromise(delay, isPositive)
+    .then(() => {
+      iziToast.success({
+        title: 'OK',
+        message: `✅ Fulfilled promise in ${delay}ms`,
+      });
+      form.reset();
+    })
+    .catch(() => {
+      iziToast.error({
+        title: 'Error',
+        message: `❌ Rejected promise in ${delay}ms`,
+      });
+      form.reset();
+    });
+});
+
+function createPromise(delay, isPositive) {
+  const promise = new Promise((res, rej) => {
+    setTimeout(() => {
+      if (isPositive) {
+        res(delay);
+      } else {
+        rej(delay);
+      }
+    }, delay);
+  });
+  return promise;
+}
