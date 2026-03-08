@@ -12,17 +12,17 @@ form.addEventListener('submit', e => {
   if (!selectedState) return alert('Оберіть стан!');
   const isPositive = selectedState.value === 'fulfilled';
   createPromise(delay, isPositive)
-    .then(() => {
+    .then(resolvedDelay => {
       iziToast.success({
         title: 'OK',
-        message: `✅ Fulfilled promise in ${delay}ms`,
+        message: `✅ Fulfilled promise in ${resolvedDelay}ms`,
       });
       form.reset();
     })
-    .catch(() => {
+    .catch(rejectedDelay => {
       iziToast.error({
         title: 'Error',
-        message: `❌ Rejected promise in ${delay}ms`,
+        message: `❌ Rejected promise in ${rejectedDelay}ms`,
       });
       form.reset();
     });
